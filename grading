@@ -1,0 +1,9 @@
+First 2 problems: 85%
+Topic Models: Either word classification or paragraphs
+      (Limit the data to something that will finish)
+
+Output conditional probability tables (so that it is possible to see where the
+source of any errors might be). So, just output a handful of rows to prove that
+the tables were generated. 
+
+Output percent of match of true state and predicted state. 
