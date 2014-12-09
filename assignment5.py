@@ -1,5 +1,6 @@
 import getopt
 import sys
+from robot import Robot
 
 def main():
     arguments, remainder = getopt.getopt(sys.argv[1:], 'p:o:')
@@ -15,6 +16,9 @@ def main():
                 print "Please specify a valid order 1 or 2"
                 exit()
             order = argument
+
+        if problem == "1":
+            robot = Robot("./Assignment5DataSets/robot_no_momentum.data")
 
 
     
