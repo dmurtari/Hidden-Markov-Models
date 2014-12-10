@@ -23,4 +23,9 @@ class Robot():
             if color not in self.observations:
                 self.observations = self.observations + (color,)
 
-        print self.states, self.observations
+            start_probability = 1/float(len(self.states))
+
+            for coordinate in self.states:
+                self.start_probability[coordinate] = start_probability
+
+        print self.states, self.observations, self.start_probability
