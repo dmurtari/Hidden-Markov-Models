@@ -1,4 +1,5 @@
 import string
+from viterbi import Viterbi
 
 class Typo():
 
@@ -14,7 +15,6 @@ class Typo():
         with open(file) as robot_data:
             contents = robot_data.readlines()
 
-        print contents
         start_letters = [0]*26
         start_counter = 0
         # starts = {}
@@ -24,8 +24,13 @@ class Typo():
         transitions = {}
         previous_letter = ""
 
+        self.states = ("a", "b", "c", "d", "e", "f", "g", "h", "i", "j", "k", "l", "m", "n", "o",
+            "p", "q", "r", "s", "t", "u", "v", "w", "x", "y", "z")
+
         for i in range(26):
             self.transition_probability[chr(ord('a') + i)] = {"counter" : 0}
+            for j in range(26):
+                self.transition_probability[chr(ord('a') + i)][chr(ord('a') + j)] = 0
 
         for i in range(26):
             self.emission_probability[chr(ord('a') + i)] = {"counter" : 0}
@@ -71,12 +76,17 @@ class Typo():
                 if child_key != "counter":
                     count = self.transition_probability[key][child_key] + 1
                     self.transition_probability[key][child_key] = count / float(self.transition_probability[key]["counter"] + 26)
+            self.transition_probability[key].pop("counter", None)
 
         for key in self.emission_probability:
             for child_key in self.emission_probability[key]:
                 if child_key != "counter":
                     count = self.emission_probability[key][child_key] + 1
                     self.emission_probability[key][child_key] = count / float(self.emission_probability[key]["counter"] + 26)
+            self.emission_probability[key].pop("counter", None)
+
+        viterbi = Viterbi(("t", "g", "e"), self.states, self.start_probability, self.transition_probability, self.emission_probability)
+        print viterbi.run_viterbi()
 
         #     coordinate, color = read_line.split(" ")
         #     moves += 1
