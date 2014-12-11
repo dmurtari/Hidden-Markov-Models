@@ -15,6 +15,7 @@ class Robot():
         starts = {}
         total_starts = 0
         total_transitions = 0
+        total_moves = 0
         previous_coordinate = "."
 
         for line in contents:
@@ -53,17 +54,38 @@ class Robot():
                     self.transition_probability[previous_coordinate] = {}
 
                 if coordinate not in self.transition_probability[previous_coordinate]:
-                    self.transition_probability[previous_coordinate][coordinate] = 0
+                    self.transition_probability[previous_coordinate][coordinate] = 1
                 else:
                     self.transition_probability[previous_coordinate][coordinate] += 1
 
+            # Generate emission probabilities by counting how often certain
+            # colors are observed on a given coordinate
+            if coordinate not in self.emission_probability:
+                self.emission_probability[coordinate] = {}
+            if color not in self.emission_probability[coordinate]:
+                self.emission_probability[coordinate][color] = 1
+            else:
+                self.emission_probability[coordinate][color] += 1
+
+            total_moves += 1
             previous_coordinate = coordinate
 
+        # Fill in start probabilities
         for coordinate in self.states:
             self.start_probability[coordinate] = starts[coordinate]/float(total_starts)
 
+        # Fill in transition probabilities
         for start, transition in self.transition_probability.iteritems():
             for end, count in transition.iteritems():
                 self.transition_probability[start][end] = count/float(total_transitions)
 
-        print self.transition_probability
+        # Fill in emission probabilities
+        for coordinate, observation in self.emission_probability.iteritems():
+            total_count = 0
+            for color, count in observation.iteritems():
+                total_count += count
+            for color, count in observation.iteritems():
+                color_count = self.emission_probability[coordinate][color]
+                self.emission_probability[coordinate][color] = color_count/float(total_count)
+
+        print self.emission_probability
