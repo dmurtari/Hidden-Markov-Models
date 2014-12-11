@@ -1,6 +1,7 @@
 import getopt
 import sys
 from robot import Robot
+from typo import Typo
 
 def main():
     arguments, remainder = getopt.getopt(sys.argv[1:], 'p:o:')
@@ -19,8 +20,10 @@ def main():
 
         if problem == "1":
             robot = Robot("./Assignment5DataSets/robot_no_momentum.data")
+        elif problem == "2":
+            typo = Typo("./Assignment5DataSets/typos10.data")
 
 
-    
+
 if __name__ == "__main__":
     main()
