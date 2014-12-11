@@ -1,3 +1,5 @@
+from viterbi import Viterbi
+
 class Robot():
 
     def __init__(self, file):
@@ -7,6 +9,7 @@ class Robot():
         self.transition_probability = {}
         self.emission_probability = {}
         self.parse(file)
+        self.run_viterbi()
 
     def parse(self, file):
         with open(file) as robot_data:
@@ -14,7 +17,7 @@ class Robot():
 
         starts = {}
         total_starts = 0
-        total_transitions = 0
+        total_transitions = 12
         total_moves = 0
         previous_coordinate = "."
 
@@ -70,9 +73,17 @@ class Robot():
             total_moves += 1
             previous_coordinate = coordinate
 
-        # Fill in start probabilities
+        # Fill in start probabilities, fill in transitions that don't exist
         for coordinate in self.states:
             self.start_probability[coordinate] = starts[coordinate]/float(total_starts)
+        
+        print self.transition_probability
+        for key, value in self.transition_probability.iteritems():
+            print key, value
+            for coordinate in self.states:
+                if coordinate not in value:
+                    self.transition_probability[key][coordinate] = 1
+
 
         # Fill in transition probabilities
         for start, transition in self.transition_probability.iteritems():
@@ -88,4 +99,10 @@ class Robot():
                 color_count = self.emission_probability[coordinate][color]
                 self.emission_probability[coordinate][color] = color_count/float(total_count)
 
-        print self.emission_probability
+        print self.states
+        print self.start_probability.keys()
+        print self.transition_probability.keys()
+        print self.emission_probability.keys()
+
+    def run_viterbi(self):
+        viterbi = Viterbi(self.observations, self.states, self.start_probability, self.transition_probability, self.emission_probability)
