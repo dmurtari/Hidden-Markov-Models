@@ -9,23 +9,22 @@ class Typo():
         self.start_probability = {}
         self.transition_probability = {}
         self.emission_probability = {}
+        self.contents = []
+        self.index = 0
         self.parse(file)
 
     def parse(self, file):
         with open(file) as robot_data:
-            contents = robot_data.readlines()
+            self.contents = robot_data.readlines()
+
 
         start_letters = [0]*26
         start_counter = 0
-        # starts = {}
-        # moves = 0
-        # previous_line = "."
-        # transitions = [[0 for x in range(5)] for x in range(5)]
         transitions = {}
         previous_letter = ""
 
-        self.states = ("a", "b", "c", "d", "e", "f", "g", "h", "i", "j", "k", "l", "m", "n", "o",
-            "p", "q", "r", "s", "t", "u", "v", "w", "x", "y", "z")
+        for i in range(26):
+            self.states = self.states + (chr(ord('a') + i),)
 
         for i in range(26):
             self.transition_probability[chr(ord('a') + i)] = {"counter" : 0}
@@ -39,7 +38,7 @@ class Typo():
 
 
         first_line = True
-        for line in contents:
+        for (i, line) in enumerate(self.contents):
             read_line = line.rstrip()
             if read_line == "_ _":
                 previous_line = read_line
@@ -47,6 +46,7 @@ class Typo():
                 continue
             if read_line == "..":
                 print "End of Test Data"
+                self.index = i
                 break
 
             letters = read_line.split(" ")
@@ -87,4 +87,36 @@ class Typo():
 
         viterbi = Viterbi(("a", "c", "v", "o", "u", "n", "t"), self.states, self.start_probability, self.transition_probability, self.emission_probability)
         print viterbi.run_viterbi()
+        print self.index
 
+    def get_observations(self):
+        contents = self.contents[self.index + 1:]
+
+        correct_answers = []
+        correct_answer = ()
+        observations = []
+        observation = ()
+
+
+        for (i, line) in enumerate(contents):
+            read_line = line.rstrip()
+            letters = read_line.split(" ")
+            if read_line == "_ _":
+                observations.append(observation)
+                observation = ()
+                correct_answers.append(correct_answer)
+                correct_answer = ()
+                continue
+            if i == len(contents):
+                observations.append(observation)
+                observation = ()
+                correct_answers.append(correct_answer)
+                correct_answer = ()
+                print "End of Test Data"
+                break
+
+            letters = read_line.split(" ")
+            observation = observation + (letters[1], )
+            correct_answer = correct_answer + (letters[0], )
+
+        print correct_answers
