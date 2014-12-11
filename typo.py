@@ -85,23 +85,6 @@ class Typo():
                     self.emission_probability[key][child_key] = count / float(self.emission_probability[key]["counter"] + 26)
             self.emission_probability[key].pop("counter", None)
 
-        viterbi = Viterbi(("t", "g", "e"), self.states, self.start_probability, self.transition_probability, self.emission_probability)
+        viterbi = Viterbi(("a", "c", "v", "o", "u", "n", "t"), self.states, self.start_probability, self.transition_probability, self.emission_probability)
         print viterbi.run_viterbi()
 
-        #     coordinate, color = read_line.split(" ")
-        #     moves += 1
-
-        #     if coordinate not in self.states:
-        #         self.states = self.states + (coordinate,)
-        #     if color not in self.observations:
-        #         self.observations = self.observations + (color,)
-
-        #     if coordinate not in starts:
-        #         starts[coordinate] = 1
-        #     else:
-        #         starts[coordinate] += 1
-
-        # for coordinate in self.states:
-        #         self.start_probability[coordinate] = starts[coordinate]/float(moves)
-
-        # print self.states, self.observations, self.start_probability

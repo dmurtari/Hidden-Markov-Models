@@ -9,7 +9,6 @@ class Viterbi:
         self.start = start
         self.transition = transition
         self.emission = emission
-        # self.run_viterbi()
 
     def run_viterbi(self):
         V = [{}]
@@ -26,8 +25,8 @@ class Viterbi:
             newpath = {}
 
             for y in self.states:
-                print y
-                print self.emission[y][self.observations[t]]
+                # print y
+                # print self.emission[y][self.observations[t]]
                 (prob, state) = max((V[t-1][y0] * self.transition[y0][y] * self.emission[y][self.observations[t]], y0) for y0 in self.states)
                 V[t][y] = prob
                 newpath[y] = path[state] + [y]

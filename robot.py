@@ -20,10 +20,13 @@ class Robot():
         total_transitions = 12
         total_moves = 0
         previous_coordinate = "."
+        first_run = True
+        total_observations = ()
 
         for line in contents:
             read_line = line.rstrip()
             if read_line == ".":
+                first_run = False
                 previous_coordinate = read_line
                 continue
             if read_line == "..":
@@ -32,12 +35,13 @@ class Robot():
 
             coordinate, color = read_line.split(" ")
 
-            # Generate the list of available coordinates and observable colors 
+
+            # Generate the list of available coordinates and observable colors
             # fom the given data
             if coordinate not in self.states:
-                self.states = self.states + (coordinate,) 
-            if color not in self.observations:
-                self.observations = self.observations + (color,)
+                self.states = self.states + (coordinate,)
+            # if color not in self.observations:
+                # self.observations = self.observations + (color,)
 
             # Keep track of start coordinates to generate the start
             # probabilities
@@ -47,6 +51,9 @@ class Robot():
             elif previous_coordinate == ".":
                 starts[coordinate] += 1
                 total_starts += 1
+
+            if first_run:
+                total_observations = total_observations + (color,)
 
             # Generate transition probabilities by seeing how often we go from
             # previous coordinate to current coordinate
@@ -76,7 +83,7 @@ class Robot():
         # Fill in start probabilities, fill in transitions that don't exist
         for coordinate in self.states:
             self.start_probability[coordinate] = starts[coordinate]/float(total_starts)
-        
+
         print self.transition_probability
         for key, value in self.transition_probability.iteritems():
             print key, value
@@ -103,6 +110,10 @@ class Robot():
         print self.start_probability.keys()
         print self.transition_probability.keys()
         print self.emission_probability.keys()
+        self.observations = total_observations
 
     def run_viterbi(self):
+        print self.observations
+
         viterbi = Viterbi(self.observations, self.states, self.start_probability, self.transition_probability, self.emission_probability)
+        print viterbi.run_viterbi()
