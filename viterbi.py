@@ -1,3 +1,4 @@
+import math
 class Viterbi:
     """
     Viterbi algorithm from: https://en.wikipedia.org/wiki/Viterbi_algorithm
@@ -16,7 +17,7 @@ class Viterbi:
 
         # Initialize base cases (t == 0)
         for y in self.states:
-            V[0][y] = self.start[y] * self.emission[y][self.observations[0]]
+            V[0][y] = math.log10(self.start[y]) +math.log10(self.emission[y][self.observations[0]])
             path[y] = [y]
 
         # Run Viterbi for t > 0
@@ -27,7 +28,9 @@ class Viterbi:
             for y in self.states:
                 # print y
                 # print self.emission[y][self.observations[t]]
-                (prob, state) = max((V[t-1][y0] * self.transition[y0][y] * self.emission[y][self.observations[t]], y0) for y0 in self.states)
+                if self.observations[t] not in self.emission[y]:
+                    self.emission[y][self.observations[t]] =1
+                (prob, state) = max((V[t-1][y0] +math.log10(self.transition[y0][y]) +math.log10(self.emission[y][self.observations[t]]), y0) for y0 in self.states)
                 V[t][y] = prob
                 newpath[y] = path[state] + [y]
 

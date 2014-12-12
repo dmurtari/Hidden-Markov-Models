@@ -99,7 +99,39 @@ class Topic():
             for end, count in transition.iteritems():
                 self.transition_probability[start][end] = count/float(transitions_from[start] + 6)
 
-        self.print_conditions()
+        for current_topic, observation in self.emission_probability.iteritems():
+            #print observation.keys()
+            for topic in self.states:
+                for key in observation.keys():
+                    if key not in self.emission_probability[topic]:
+                        self.emission_probability[topic][key] = 1
+
+        # Fill in emission probabilities
+        for current_topic, observation in self.emission_probability.iteritems():
+            total_count = 0
+            for word, count in observation.iteritems():
+                total_count += count
+            for word, count in observation.iteritems():
+                word_count = self.emission_probability[current_topic][word]
+                self.emission_probability[current_topic][word] = word_count/float(total_count)
+        #print self.emission_probability["baseball"]["civil"]
+        #self.print_conditions()
+        print self.states
+
+        isTesting = False;
+
+        for line in contents:
+            read_line = line.rstrip()
+            if read_line == "..":
+                print "BeginTest"
+                isTesting = True
+                continue
+            if isTesting:
+                words = read_line.split(" ")
+                #current_topic = words[0]
+                self.observations = tuple(words[1:])
+                break
+        #print self.observations
 
     def print_conditions(self):
         total = 0
@@ -139,8 +171,8 @@ class Topic():
 
 
     def run_viterbi(self):
-        print "Fin"
+        #print "Fin"
         #print self.observations
 
-        #viterbi = Viterbi(self.observations, self.states, self.start_probability, self.transition_probability, self.emission_probability)
-        #print viterbi.run_viterbi()
+        viterbi = Viterbi(self.observations, self.states, self.start_probability, self.transition_probability, self.emission_probability)
+        print viterbi.run_viterbi()
