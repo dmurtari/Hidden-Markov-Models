@@ -11,6 +11,7 @@ class Typo():
         self.emission_probability = {}
         self.contents = []
         self.index = 0
+        self.iteration = 0
         self.parse(file)
 
     def parse(self, file):
@@ -162,11 +163,15 @@ class Typo():
             viterbi = Viterbi(observation, self.states, self.start_probability, self.transition_probability, self.emission_probability)
             corrected_letters = corrected_letters + viterbi.run_viterbi()[1]
 
+        print "Some of the reconstructed state sequence: "
         for (i, letter) in enumerate(corrected_letters):
             if letter == correct_answers[i]:
                 hit += 1
+            if self.iteration < 100:
+                print letter
+                self.iteration += 1
             total += 1
 
-        print "Correctness:"
-        print hit/float(total)
+
+        print "Percent correctness:", hit/float(total) * 100
 
