@@ -18,10 +18,11 @@ def main():
                 exit()
             order = argument
 
-        if problem == "1":
-            robot = Robot("./Assignment5DataSets/robot_no_momentum.data")
-        elif problem == "2":
-            typo = Typo("./Assignment5DataSets/typos10.data")
+    if problem == "1":
+        robot = Robot("./Assignment5DataSets/robot_no_momentum.data")
+    elif problem == "2":
+        typo = Typo("./Assignment5DataSets/typos10.data")
+        typo.get_observations()
 
 
 
