@@ -10,7 +10,6 @@ class Robot():
         self.contents = []
         self.index = 0
         self.parse(file)
-        self.run_viterbi()
 
     def parse(self, file):
         with open(file) as robot_data:

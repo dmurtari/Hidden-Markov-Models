@@ -23,8 +23,10 @@ def main():
         robot = Robot("./Assignment5DataSets/robot_no_momentum.data")
     elif problem == "2":
         typo = Typo("./Assignment5DataSets/typos10.data")
+        typo.get_observations()
     elif problem == "3":
         topic = Topic("./Assignment5DataSets/topics.data")
+        topic.run_viterbi()
 
 
 
