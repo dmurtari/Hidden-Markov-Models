@@ -8,6 +8,7 @@ class Robot():
         self.transition_probability = {}
         self.emission_probability = {}
         self.contents = []
+        self.sum = 0
         self.index = 0
         self.parse(file)
 
@@ -137,4 +138,9 @@ class Robot():
             if guessed_path[i] != correct_path[i]:
                 incorrect += 1
 
-        print (total - incorrect)/float(total) * 100, "percent correct"
+        percent_correct = (total - incorrect)/float(total) * 100
+        self.sum += percent_correct
+        print percent_correct, "percent correct"
+
+    def print_average(self):
+        print "Average percent correct:", self.sum/float(200)

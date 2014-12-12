@@ -14,6 +14,8 @@ def main():
                 exit()
             problem = argument
         elif option == "-o":
+            print "Functionality not yet implemented"
+            exit()
             if argument not in ("1", "2"):
                 print "Please specify a valid order 1 or 2"
                 exit()
@@ -21,12 +23,14 @@ def main():
 
     if problem == "1":
         robot = Robot("./Assignment5DataSets/robot_no_momentum.data")
+        robot.run_viterbi()
+        robot.print_average()
     elif problem == "2":
         typo = Typo("./Assignment5DataSets/typos10.data")
         typo.get_observations()
     elif problem == "3":
+        print "Funcionality not yet implemented"
         topic = Topic("./Assignment5DataSets/topics.data")
-        topic.run_viterbi()
 
 
 
