@@ -16,17 +16,16 @@ class Topic():
             contents = topics_data.readlines()
 
         starts = {}
+        transitions_from = {}
         total_starts = 0
         total_transitions = 6
         total_moves = 0
         previous_topic = "."
-        #first_run = True
-        total_observations = ()
 
         for line in contents:
             read_line = line.rstrip()
             if read_line == "..":
-                print "End of Test Data1"
+                print "End of Test Data"
                 break
             words = read_line.split(" ")
             current_topic = words[0]
@@ -46,6 +45,11 @@ class Topic():
 
             if previous_topic != ".":
                 total_transitions += 1
+                if previous_topic not in transitions_from:
+                    transitions_from[previous_topic] = 1
+                else:
+                    transitions_from[previous_topic] += 1
+
                 if previous_topic not in self.transition_probability:
                     self.transition_probability[previous_topic] = {}
 
@@ -72,16 +76,51 @@ class Topic():
             self.start_probability[current_topic] = starts[current_topic]/float(total_starts)
 
         for key, value in self.transition_probability.iteritems():
-            print key, value
             for current_topic in self.states:
                 if current_topic not in value:
                     self.transition_probability[key][current_topic] = 1
 
-        print self.states
-        print self.start_probability.keys()
-        print self.transition_probability.keys()
-        print self.emission_probability.keys()
+        for start, transition in self.transition_probability.iteritems():
+            for end, count in transition.iteritems():
+                self.transition_probability[start][end] = count/float(transitions_from[start] + 6)
 
+        self.print_conditions()
+    
+    def print_conditions(self):
+        total = 0
+        string = ""
+        print "Rounded start probability:"
+        for (key, val) in self.start_probability.iteritems():
+            tmp = "%s: %.4f, " % (key, self.start_probability[key])
+            string = string + tmp
+            total += self.start_probability[key]
+        print string
+
+        print "\nA few rounded transition probability:"
+        i = 0
+        for key, val in self.transition_probability.iteritems():
+            string = ""
+            print key
+            if i > 1:
+                break
+            for (child_key, child_val) in val.iteritems():
+                tmp = "%s: %.4f, " % (child_key, child_val)
+                string += tmp
+            print string
+            i += 1
+
+        print "\nA few rounded emission probability:"
+        i = 0
+        for key, val in self.emission_probability.iteritems():
+            string = ""
+            print key
+            if i > 1:
+                break
+            for (child_key, child_val) in val.iteritems():
+                tmp = "%s: %.4f, " % (child_key, child_val)
+                string += tmp
+            print string
+            i += 1
 
 
     def run_viterbi(self):
