@@ -10,6 +10,7 @@ class Robot():
         self.contents = []
         self.sum = 0
         self.index = 0
+        self.iteration = 0
         self.parse(file)
 
     def parse(self, file):
@@ -153,6 +154,7 @@ class Robot():
                                   self.emission_probability)
                 deduced_path = viterbi.run_viterbi()
                 junk, guessed_path = deduced_path
+                self.iteration += 1
                 self.check_correctness(guessed_path, correct_path)
                 observations = ()
                 correct_path = []
@@ -172,7 +174,9 @@ class Robot():
                 incorrect += 1
 
         percent_correct = (total - incorrect)/float(total) * 100
-        print "."
+        if self.iteration < 10:
+            print "The guessed path is: ", guessed_path
+        print "For test", self.iteration, "the percent correct is", percent_correct
         self.sum += percent_correct
 
     def print_average(self):
