@@ -86,6 +86,7 @@ class Typo():
                     self.emission_probability[key][child_key] = count / float(self.emission_probability[key]["counter"] + 26)
             self.emission_probability[key].pop("counter", None)
 
+
     def print_conditions(self):
         total = 0
         string = ""

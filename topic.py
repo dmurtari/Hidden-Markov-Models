@@ -27,7 +27,7 @@ class Topic():
         for line in contents:
             read_line = line.rstrip()
             if read_line == "..":
-                print "End of Test Data"
+                print "End of Training Data"
                 break
             words = read_line.split(" ")
             current_topic = words[0]
@@ -118,7 +118,8 @@ class Topic():
                 self.emission_probability[current_topic][word] = word_count/float(total_count)
         #print self.emission_probability["baseball"]["civil"]
         #self.print_conditions()
-        print self.states
+        # print self.states
+        self.print_conditions()
 
         isTesting = False;
         ttl = 500
@@ -138,14 +139,13 @@ class Topic():
                 self.solutions = self.solutions+ (words[0],)*len(words[1:])
                 self.observations = self.observations+ tuple(words[1:])
 
-        #print self.observations
 
     def print_conditions(self):
         total = 0
         string = ""
         print "Rounded start probability:"
         for (key, val) in self.start_probability.iteritems():
-            tmp = "%s: %.4f, " % (key, self.start_probability[key])
+            tmp = "%s: %.9f, " % (key, self.start_probability[key])
             string = string + tmp
             total += self.start_probability[key]
         print string
@@ -158,7 +158,7 @@ class Topic():
             if i > 1:
                 break
             for (child_key, child_val) in val.iteritems():
-                tmp = "%s: %.4f, " % (child_key, child_val)
+                tmp = "%s: %.9f, " % (child_key, child_val)
                 string += tmp
             print string
             i += 1
@@ -171,7 +171,7 @@ class Topic():
             if i > 1:
                 break
             for (child_key, child_val) in val.iteritems():
-                tmp = "%s: %.4f, " % (child_key, child_val)
+                tmp = "%s: %.9f, " % (child_key, child_val)
                 string += tmp
             print string
             i += 1

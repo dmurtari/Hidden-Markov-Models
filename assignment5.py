@@ -27,7 +27,6 @@ def main():
         typo = Typo("./Assignment5DataSets/typos10.data")
         typo.get_observations()
     elif problem == "3":
-        print "Funcionality not yet implemented"
         topic = Topic("./Assignment5DataSets/topics.data")
 
 
