@@ -14,8 +14,8 @@ class Typo():
         self.parse(file)
 
     def parse(self, file):
-        with open(file) as robot_data:
-            self.contents = robot_data.readlines()
+        with open(file) as typo_data:
+            self.contents = typo_data.readlines()
 
 
         start_letters = [0]*26
@@ -85,11 +85,46 @@ class Typo():
                     self.emission_probability[key][child_key] = count / float(self.emission_probability[key]["counter"] + 26)
             self.emission_probability[key].pop("counter", None)
 
-        viterbi = Viterbi(("a", "c", "v", "o", "u", "n", "t"), self.states, self.start_probability, self.transition_probability, self.emission_probability)
-        print viterbi.run_viterbi()
-        print self.index
+    def print_conditions(self):
+        total = 0
+        string = ""
+        print "Rounded start probability:"
+        for (key, val) in self.start_probability.iteritems():
+            tmp = "%s: %.4f, " % (key, self.start_probability[key])
+            string = string + tmp
+            total += self.start_probability[key]
+        print string
+
+        print "\nA few rounded transition probability:"
+        i = 0
+        for key, val in self.transition_probability.iteritems():
+            string = ""
+            print key
+            if i > 1:
+                break
+            for (child_key, child_val) in val.iteritems():
+                tmp = "%s: %.4f, " % (child_key, child_val)
+                string += tmp
+            print string
+            i += 1
+
+        print "\nA few rounded emission probability:"
+        i = 0
+        for key, val in self.emission_probability.iteritems():
+            string = ""
+            print key
+            if i > 1:
+                break
+            for (child_key, child_val) in val.iteritems():
+                tmp = "%s: %.4f, " % (child_key, child_val)
+                string += tmp
+            print string
+            i += 1
+
 
     def get_observations(self):
+        self.print_conditions()
+
         contents = self.contents[self.index + 1:]
 
         correct_answers = []
@@ -101,22 +136,37 @@ class Typo():
         for (i, line) in enumerate(contents):
             read_line = line.rstrip()
             letters = read_line.split(" ")
+
             if read_line == "_ _":
                 observations.append(observation)
                 observation = ()
-                correct_answers.append(correct_answer)
-                correct_answer = ()
                 continue
-            if i == len(contents):
+            if i + 1 == len(contents):
+                observation = observation + (letters[1], )
+                correct_answers.append(letters[0])
                 observations.append(observation)
                 observation = ()
-                correct_answers.append(correct_answer)
-                correct_answer = ()
-                print "End of Test Data"
                 break
 
-            letters = read_line.split(" ")
             observation = observation + (letters[1], )
-            correct_answer = correct_answer + (letters[0], )
+            correct_answers.append(letters[0])
 
-        print correct_answers
+        correct_letters = []
+        corrected_letters = []
+
+
+        viterbi = Viterbi(observations[0], self.states, self.start_probability, self.transition_probability, self.emission_probability)
+        hit = 0
+        total = 0
+        for (i, observation) in enumerate(observations):
+            viterbi = Viterbi(observation, self.states, self.start_probability, self.transition_probability, self.emission_probability)
+            corrected_letters = corrected_letters + viterbi.run_viterbi()[1]
+
+        for (i, letter) in enumerate(corrected_letters):
+            if letter == correct_answers[i]:
+                hit += 1
+            total += 1
+
+        print "Correctness:"
+        print hit/float(total)
+
