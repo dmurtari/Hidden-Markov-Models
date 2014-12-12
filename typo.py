@@ -168,10 +168,10 @@ class Typo():
             if letter == correct_answers[i]:
                 hit += 1
             if self.iteration < 100:
-                print letter
+                print letter,
                 self.iteration += 1
             total += 1
 
 
-        print "Percent correctness:", hit/float(total) * 100
+        print "\nPercent correctness:", hit/float(total) * 100
 
