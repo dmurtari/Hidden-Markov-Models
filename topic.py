@@ -190,7 +190,7 @@ class Topic():
         num_correct=0
         num_wrong =0
         for num in range(0,len(deduced_path)):
-            #print deduced_path[num], self.solutions[num]
+            print self.observations[num], deduced_path[num]
             if deduced_path[num] == self.solutions[num]:
               num_correct+=1
             else:
