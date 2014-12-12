@@ -1,10 +1,12 @@
 from viterbi import Viterbi
+#0.863180827887
 
 class Topic():
 
     def __init__(self, file):
         self.states = ()
         self.observations = ()
+        self.solutions = ()
         self.start_probability = {}
         self.transition_probability = {}
         self.emission_probability = {}
@@ -119,6 +121,7 @@ class Topic():
         print self.states
 
         isTesting = False;
+        ttl = 500
 
         for line in contents:
             read_line = line.rstrip()
@@ -127,10 +130,14 @@ class Topic():
                 isTesting = True
                 continue
             if isTesting:
+                ttl = ttl-1
+                if( ttl<=0):
+                  break
                 words = read_line.split(" ")
                 #current_topic = words[0]
-                self.observations = tuple(words[1:])
-                break
+                self.solutions = self.solutions+ (words[0],)*len(words[1:])
+                self.observations = self.observations+ tuple(words[1:])
+
         #print self.observations
 
     def print_conditions(self):
@@ -169,10 +176,23 @@ class Topic():
             print string
             i += 1
 
-
     def run_viterbi(self):
         #print "Fin"
         #print self.observations
 
         viterbi = Viterbi(self.observations, self.states, self.start_probability, self.transition_probability, self.emission_probability)
-        print viterbi.run_viterbi()
+        (junk, deduced_path)= viterbi.run_viterbi()
+        self.checkSolutions(deduced_path)
+
+    def checkSolutions(self,deduced_path):
+        ##print len(deduced_path)
+        #print len(self.solutions)
+        num_correct=0
+        num_wrong =0
+        for num in range(0,len(deduced_path)):
+            #print deduced_path[num], self.solutions[num]
+            if deduced_path[num] == self.solutions[num]:
+              num_correct+=1
+            else:
+              num_wrong+=1
+        print num_correct/(float)(num_correct+num_wrong)
