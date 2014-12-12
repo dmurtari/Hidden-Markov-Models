@@ -1,3 +1,6 @@
+# CSCI 3202 Assignment 5
+# Evan Roncevich, Irakli Zhuzhunashvili, Domenic Murtari
+
 import getopt
 import sys
 from robot import Robot
