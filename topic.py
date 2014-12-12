@@ -61,6 +61,22 @@ class Topic():
             # Generate emission probabilities by counting how often certain
             # word appears in given topic
             for word in words:
+                total_transitions += 1
+                if current_topic not in transitions_from:
+                    transitions_from[current_topic] = 1
+                else:
+                    transitions_from[current_topic] += 1
+
+                if current_topic not in self.transition_probability:
+                    self.transition_probability[current_topic] = {}
+
+                if current_topic not in self.transition_probability[current_topic]:
+                    self.transition_probability[current_topic][current_topic] = 1
+                else:
+                    self.transition_probability[current_topic][current_topic] += 1
+
+
+
                 if current_topic not in self.emission_probability:
                     self.emission_probability[current_topic] = {}
                 if word not in self.emission_probability[current_topic]:
@@ -68,7 +84,6 @@ class Topic():
                 else:
                     self.emission_probability[current_topic][word] += 1
 
-            total_moves += 1
             previous_topic = current_topic
 
         # Fill in start probabilities, fill in transitions that don't exist
@@ -85,7 +100,7 @@ class Topic():
                 self.transition_probability[start][end] = count/float(transitions_from[start] + 6)
 
         self.print_conditions()
-    
+
     def print_conditions(self):
         total = 0
         string = ""
