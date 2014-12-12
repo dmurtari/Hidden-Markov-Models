@@ -100,10 +100,43 @@ class Robot():
                 color_count = self.emission_probability[coordinate][color]
                 self.emission_probability[coordinate][color] = color_count/float(total_count)
 
-        # print self.states
-        # print self.start_probability
-        # print self.transition_probability
-        # print self.emission_probability
+        self.print_conditions()
+
+    def print_conditions(self):
+        total = 0
+        string = ""
+        print "Rounded start probability:"
+        for (key, val) in self.start_probability.iteritems():
+            tmp = "%s: %.4f, " % (key, self.start_probability[key])
+            string = string + tmp
+            total += self.start_probability[key]
+        print string
+
+        print "\nA few rounded transition probability:"
+        i = 0
+        for key, val in self.transition_probability.iteritems():
+            string = ""
+            print key
+            if i > 1:
+                break
+            for (child_key, child_val) in val.iteritems():
+                tmp = "%s: %.4f, " % (child_key, child_val)
+                string += tmp
+            print string
+            i += 1
+
+        print "\nA few rounded emission probability:"
+        i = 0
+        for key, val in self.emission_probability.iteritems():
+            string = ""
+            print key
+            if i > 12:
+                break
+            for (child_key, child_val) in val.iteritems():
+                tmp = "%s: %.4f, " % (child_key, child_val)
+                string += tmp
+            print string
+            i += 1
 
     def run_viterbi(self):
         contents = self.contents[self.index + 1:]
@@ -139,8 +172,8 @@ class Robot():
                 incorrect += 1
 
         percent_correct = (total - incorrect)/float(total) * 100
+        print "."
         self.sum += percent_correct
-        print percent_correct, "percent correct"
 
     def print_average(self):
         print "Average percent correct:", self.sum/float(200)
